@@ -2,7 +2,7 @@ const Sequelize = require("sequelize")
 const db = require("../config/database")
 
 const Character = db.define(
-    "Character",
+    "character",
     {
 
         image: {
