@@ -4,7 +4,7 @@ module.exports = {
   /* Get all characters */
   charactersIndex(req, res) {
     Character.findAll({
-      attributes: ['image', 'name']
+      attributes: ["image", "name"],
     })
       .then((chars) => {
         res.status(200).json(chars);
@@ -24,15 +24,18 @@ module.exports = {
       weight,
       history,
     })
-      .then((newChar) => res.json({
-        ok: true,
-        newChar
-
-      }))
-      .catch((err) => res.status(500).json({
-        ok: false,
-        err: err.errors[0].message
-      }));
+      .then((newChar) =>
+        res.json({
+          ok: true,
+          newChar,
+        })
+      )
+      .catch((err) =>
+        res.status(500).json({
+          ok: false,
+          err: err.errors[0].message,
+        })
+      );
   },
 
   /* Edit a character */
@@ -40,14 +43,13 @@ module.exports = {
     let id = req.params.id;
     let { image, name, age, weight, history } = req.body;
 
-    
     let charToEdit = await Character.findOne({ where: { id } });
 
     if (!charToEdit) {
       return res.status(400).json({
         ok: false,
-        error: `Character with id ${id} not found`
-      })
+        error: `Character with id ${id} not found`,
+      });
     }
 
     charToEdit.name = name || charToEdit.name;
@@ -59,8 +61,8 @@ module.exports = {
     await charToEdit.save();
     res.json({
       ok: true,
-      charToEdit
-    })
+      charToEdit,
+    });
   },
 
   /* Delete a character */
@@ -76,13 +78,13 @@ module.exports = {
     if (!charToDelete) {
       return res.status(400).json({
         ok: false,
-        error: `Character with id ${id} not found`
-      })
+        error: `Character with id ${id} not found`,
+      });
     }
 
     res.json({
       ok: true,
-      message: `Character with id ${id} deleted succesfully`
-    })
+      message: `Character with id ${id} deleted succesfully`,
+    });
   },
 };
