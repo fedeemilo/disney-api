@@ -10,10 +10,12 @@
 
 ### Routes
 
-- ALL characters       GET       /characters
+- CHARACTERS
 
-- NEW character        POST      /characters/add     
+    - ALL characters       GET       /characters
 
-- EDIT character       PUT       /characters/edit/{charID}
+    - NEW character        POST      /characters/add     
 
-- DELETE character     DELETE    /characters/delete/{charID}
+    - EDIT character       PUT       /characters/edit/{charID}
+
+    - DELETE character     DELETE    /characters/delete/{charID}
