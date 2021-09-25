@@ -1,36 +1,33 @@
-const Sequelize = require("sequelize")
-const db = require("../config/database")
 
-const Character = db.define(
-    "character",
-    {
 
+module.exports = (sequelize, DataTypes) => {
+    const Character = sequelize.define("character", {
         image: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
 
         name: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             allowNull: false
         },
 
         age: {
-            type: Sequelize.INTEGER
+            type: DataTypes.INTEGER
         },
 
         weight: {
-            type: Sequelize.FLOAT
+            type: DataTypes.FLOAT
         },
 
         history: {
-            type: Sequelize.STRING
-        },
+            type: DataTypes.STRING
+        }
 
         // filmsOrSeries: {
         //     type: Seq,
         // },
-    }
-)
+    })
 
-module.exports = Character
+    return Character
+}

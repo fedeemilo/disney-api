@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize")
 const db = require("../config/database")
 
-const Gender = db.define("Gender", {
+const Genre = db.define("Genre", {
     name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -17,4 +17,4 @@ const Gender = db.define("Gender", {
     // },
 })
 
-module.exports = Gender
+module.exports = Genre
