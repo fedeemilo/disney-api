@@ -25,7 +25,7 @@ const Character = db.define(
 
         history: {
             type: Sequelize.STRING
-        }
+        },
 
         // filmsOrSeries: {
         //     type: Seq,
