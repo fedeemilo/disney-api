@@ -1,9 +1,7 @@
-
-
 module.exports = (sequelize, DataTypes) => {
     const Character = sequelize.define("character", {
         image: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(200),
             allowNull: false
         },
 
@@ -21,13 +19,20 @@ module.exports = (sequelize, DataTypes) => {
         },
 
         history: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING(500)
         }
-
-        // filmsOrSeries: {
-        //     type: Seq,
-        // },
     })
+
+    Character.associate = function (models) {
+        // Many to many with movies
+        Character.belongsToMany(models.Movie, {
+            through: "character_movies",
+            as: "movies",
+            foreignKey: "character_id",
+            targetKey: "id",
+            onDelete: "CASCADE"
+        })
+    }
 
     return Character
 }

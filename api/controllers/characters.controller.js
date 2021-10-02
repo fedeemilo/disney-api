@@ -1,6 +1,7 @@
-const db = require('../../config/database')
+const db = require("../../config/database")
 const { errServer, errRequest } = require("../../utils/errors")
-const Character = db.Character;
+const Character = db.Character
+const Movie = db.Movie
 
 module.exports = {
     /* Get all characters (name & image) */
@@ -19,19 +20,17 @@ module.exports = {
 
             return res.json({
                 ok: true,
-                charSearch: result
+                charSearch
             })
         } else {
             // handle return all characters
             Character.findAll({
                 attributes: ["image", "name"]
             })
-                .then((chars) => {
+                .then(chars => {
                     res.status(200).json(chars)
                 })
-                .catch((err) =>
-                    errServer(res, err)
-                )
+                .catch(err => errServer(res, err))
         }
     },
 
@@ -40,10 +39,19 @@ module.exports = {
         let id = req.params.id
 
         try {
-            let charById = await Character.findOne({ where: { id } })
+            let charById = await Character.findOne({
+                where: { id },
+                include: [
+                    {
+                        model: Movie,
+                        as: "movies",
+                        attributes: ["image", "title", "creationDate"]
+                    }
+                ]
+            })
 
             if (!charById) {
-                errRequest(res, `Character with ${id} not found`)
+                errRequest(res, `Character with id ${id} not found`)
             }
 
             res.status(200).json({
@@ -58,37 +66,52 @@ module.exports = {
 
     /* Add a character */
     charactersAdd(req, res) {
-        let { image, name, age, weight, history } = req.body
+        let { image, name, age, weight, history, movie_id } = req.body
 
-        // Insert into table
+        // Insert character into table
         Character.create({
             image,
             name,
             age,
             weight,
-            history
+            history,
+            movie_id
         })
-            .then((newChar) =>
+            .then(newChar =>
                 res.status(200).json({
                     ok: true,
                     newChar
                 })
             )
-            .catch((err) => errServer(res, err))
+            .catch(err => errServer(res, err))
     },
 
     /* Edit a character */
     async charactersEdit(req, res) {
         let id = req.params.id
-        let { image, name, age, weight, history } = req.body
+        let { image, name, age, weight, history, movieId } = req.body
 
         try {
             let charToEdit = await Character.findOne({
-                where: { id }
+                where: { id },
+                include: [
+                    {
+                        model: Movie,
+                        as: "movies"
+                    }
+                ]
             })
 
             if (!charToEdit) {
                 errRequest(res, `Character with id ${id} not found`)
+            }
+
+            let movieToAdd = await Movie.findOne({
+                where: { id: movieId }
+            })
+            
+            if (movieId && movieId !== 0 && movieToAdd) {
+                charToEdit.addMovie(movieToAdd)
             }
 
             charToEdit.name = name || charToEdit.name
@@ -100,7 +123,7 @@ module.exports = {
             await charToEdit.save()
             res.status(200).json({
                 ok: true,
-                charToEdit
+                message: "Character edited succesfully!"
             })
         } catch (error) {
             console.error(error)

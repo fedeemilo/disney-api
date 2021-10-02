@@ -4,6 +4,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 // Options
 const swaggerOptions = {
   swaggerDefinition: {
+    openapi: '3.0.1',
     info: {
       title: "Disney World API",
       version: "1.0.0",
@@ -13,12 +14,20 @@ const swaggerOptions = {
         name: "Federico Milone",
         email: "fedeemilo91@gmail.com",
       },
-      license: {
-        name: "MIT",
-        url: "https://opensource.org/licenses/MIT",
-      },
       servers: ["http://localhost:8000"],
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }]
   },
   apis: ["./api/routes/*.route.js"],
   

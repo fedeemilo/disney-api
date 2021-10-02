@@ -1,12 +1,15 @@
-const express = require("express");
-const { moviesIndex } = require("../controllers/movies.controller");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
+const {
+    moviesIndex,
+    moviesAdd
+} = require("../controllers/movies.controller")
 
-/* GET shows list (image, title and creationDate) */
+/* GET movies list (image, title and creationDate) */
 
 /**
  * @swagger
- * /movies:
+ * /api/v1/movies:
  *  get:
  *    description: GET all disney movies and series || SEARCH by title, genre or in creation order (ASC | DESC)
  *    tags:
@@ -35,10 +38,59 @@ const router = express.Router();
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  */
-router.get('/', moviesIndex)
+router.get("/movies", moviesIndex)
 
+/* ADD a new movie/serie */
+
+/**
+ * @swagger
+ * /api/v1/movies/add:
+ *  post:
+ *    description: ADD new movie/serie
+ *    tags:
+ *      - movies
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - title
+ *              - image
+ *              - creationDate
+ *            properties:
+ *              title:
+ *                type: string
+ *              image:
+ *                type: string
+ *              creationDate:
+ *                type: string
+ *                default: DD/MM/YYYY
+ *              calification:
+ *                type: number
+ *              character_id:
+ *                  type: array
+ *                  items:
+ *                      type: integer
+ *
+ *    produces:
+ *      - application/json
+ *
+ *    responses:
+ *      '200':
+ *          description: A succesful response
+ *      '400':
+ *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
+ *      '500':
+ *          description: Unexpected server error
+ */
+router.post("/movies/add", moviesAdd)
 
 module.exports = router

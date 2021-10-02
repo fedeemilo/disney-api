@@ -1,21 +1,28 @@
 # Disney World API
 
-### Models
+## To run the app
 
-- character
+- Clone repository
 
-- show
+- cd disney-api && npm install
 
-- gender
+- Run with => npm run dev
 
-### Routes
+- The app run's in port 8000
 
-- CHARACTERS
+## Auth
 
-    - ALL characters       GET       /characters
+You must register as a user in order to obtain the token 
+that will allow you to make requests to the different endpoints
 
-    - NEW character        POST      /characters/add     
+- You can test the endpoints through swagger going to /api-docs 
 
-    - EDIT character       PUT       /characters/edit/{charID}
+- Go to api/v1/register and provide your credentials
 
-    - DELETE character     DELETE    /characters/delete/{charID}
+- When registration is successfull, go to api/v1/login
+
+- Login to obtain the token
+
+- Copy the token and scroll up until you find the "authorize" button
+
+- Paste the token and click "authorize" to start testing the routes

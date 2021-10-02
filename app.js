@@ -1,5 +1,11 @@
 const express = require("express")
 const app = express()
+const { indexApi } = require('./utils/html') 
+
+// Passport
+const passport = require("passport")
+require("./auth/passport")
+app.use(passport.initialize())
 
 // Swagger Docs
 const swaggerDocs = require("./swagger_config")
@@ -9,24 +15,25 @@ const swaggerUi = require("swagger-ui-express")
 // Database
 const db = require("./config/database")
 
+
+
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.get("/", (req, res) => {
-    res.send("INDEX!")
+    res.send(indexApi())
 })
 
 // Character routes
-app.use("/characters", require("./api/routes/characters.route"))
-app.use("/movies", require("./api/routes/movies.route"))
+app.use("/api/v1", require("./api/routes/index.route"))
 
 const port = process.env.port || 8000
 
 db.sequelize
     .sync()
-    .then((x) =>
+    .then(() =>
         app.listen(port, () =>
             console.log(`Server listening on port ${port}`)
         )

@@ -1,20 +1,21 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const { authWithToken } = require("../../middlewares")
+const router = express.Router()
 const {
-  charactersIndex,
-  charactersAdd,
-  charactersEdit,
-  charactersDelete,
-  characterById
-} = require("../controllers/characters.controller");
+    charactersIndex,
+    charactersAdd,
+    charactersEdit,
+    charactersDelete,
+    characterById
+} = require("../controllers/characters.controller")
 
 /* GET characters list (image and name) */
 
 /**
  * @swagger
- * /characters:
+ * /api/v1/characters:
  *  get:
- *    description: GET all disney characters || SEARCH by name, age, weight or movieID
+ *    description: GET all disney characters || SEARCH by name, age or weight
  *    tags:
  *      - characters
  *    parameters:
@@ -33,11 +34,6 @@ const {
  *        description: Search character by weight
  *        schema:
  *          type: number
- *      - in: query
- *        name: movies
- *        description: Search character by movieID
- *        schema:
- *          type: integer
  *    produces:
  *      - application/json
  *
@@ -46,17 +42,18 @@ const {
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  */
-router.get("/", charactersIndex);
-
+router.get("/characters", authWithToken, charactersIndex)
 
 /* GET character by ID */
 
 /**
  * @swagger
- * /characters/{id}:
+ * /api/v1/characters/{id}:
  *  get:
  *    description: GET detailed character by ID
  *    tags:
@@ -76,42 +73,45 @@ router.get("/", charactersIndex);
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  */
-router.get('/:id', characterById)
-
+router.get("/characters/:id", authWithToken, characterById)
 
 /* ADD a new character */
 
 /**
  * @swagger
- * /characters/add:
+ * /api/v1/characters/add:
  *  post:
  *    description: ADD new character
  *    tags:
  *      - characters
- *    parameters:
- *      - in: body
- *        name: character
- *        description: Add a new character to the database
- *        schema:
- *          type: object
- *          required:
- *            - name
- *            - image
- *          properties:
- *            name:
- *              type: string
- *            image:
- *              type: string
- *            age:
- *              type: integer
- *            weight:
- *              type: number
- *            history:
- *              type: string
- *
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - name
+ *              - image
+ *            properties:
+ *              name:
+ *                type: string
+ *              image:
+ *                type: string
+ *              age:
+ *                type: integer
+ *              weight:
+ *                type: number
+ *              history:
+ *                type: string
+ *              movies:
+ *                type: array
+ *                items:
+ *                  type: integer
  *    produces:
  *      - application/json
  *
@@ -120,18 +120,20 @@ router.get('/:id', characterById)
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  */
-router.post("/add", charactersAdd);
+router.post("/characters/add", authWithToken, charactersAdd)
 
 /* EDIT a character */
 
 /**
  * @swagger
- * /characters/edit/{id}:
+ * /api/v1/characters/edit/{id}:
  *  put:
- *    description: ADD new character
+ *    description: EDIT character by id
  *    tags:
  *      - characters
  *    parameters:
@@ -141,25 +143,27 @@ router.post("/add", charactersAdd);
  *        required: true
  *        schema:
  *          type: integer
- *      - in: body
- *        name: character
- *        description: Add a new character to the database
- *        schema:
- *          type: object
- *          required:
- *            - name
- *            - image
- *          properties:
- *            name:
- *              type: string
- *            image:
- *              type: string
- *            age:
- *              type: integer
- *            weight:
- *              type: number
- *            history:
- *              type: string
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - name
+ *              - image
+ *            properties:
+ *              name:
+ *                type: string
+ *              image:
+ *                type: string
+ *              age:
+ *                type: integer
+ *              weight:
+ *                type: number
+ *              history:
+ *                type: string
+ *              movieId:
+ *                  type: integer
  *
  *    produces:
  *      - application/json
@@ -169,17 +173,19 @@ router.post("/add", charactersAdd);
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  *
  */
-router.put("/edit/:id", charactersEdit);
+router.put("/characters/edit/:id", authWithToken, charactersEdit)
 
 /* DELETE a character */
 
 /**
  * @swagger
- * /characters/delete/{id}:
+ * /api/v1/characters/delete/{id}:
  *  delete:
  *    description: DELETE a character
  *    tags:
@@ -200,10 +206,16 @@ router.put("/edit/:id", charactersEdit);
  *          description: A succesful response
  *      '400':
  *          description: Bad request. The ID does not exist
+ *      '401':
+ *          description: You must provide an authorization token
  *      '500':
  *          description: Unexpected server error
  *
  */
-router.delete("/delete/:id", charactersDelete);
+router.delete(
+    "/characters/delete/:id",
+    authWithToken,
+    charactersDelete
+)
 
-module.exports = router;
+module.exports = router
