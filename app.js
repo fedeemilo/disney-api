@@ -15,8 +15,6 @@ const swaggerUi = require("swagger-ui-express")
 // Database
 const db = require("./config/database")
 
-
-
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
