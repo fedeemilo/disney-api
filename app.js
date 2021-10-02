@@ -22,11 +22,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
+// Index route
 app.get("/", (req, res) => {
     res.send(indexApi())
 })
 
-// Character routes
+// Routes
 app.use("/api/v1", require("./api/routes/index.route"))
 
 const port = process.env.port || 8000
