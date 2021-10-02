@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const { authWithToken } = require("../../middlewares")
 const {
     moviesIndex,
     moviesAdd
@@ -43,7 +44,7 @@ const {
  *      '500':
  *          description: Unexpected server error
  */
-router.get("/movies", moviesIndex)
+router.get("/movies", authWithToken, moviesIndex)
 
 /* ADD a new movie/serie */
 
@@ -91,6 +92,6 @@ router.get("/movies", moviesIndex)
  *      '500':
  *          description: Unexpected server error
  */
-router.post("/movies/add", moviesAdd)
+router.post("/movies/add", authWithToken, moviesAdd)
 
 module.exports = router
